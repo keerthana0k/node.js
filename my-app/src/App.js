@@ -4,16 +4,23 @@ import './App.css';
 function App() {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState('');
+  const [products, setProducts] =  useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/items')
+    fetch('http://localhost:5001/api/items')
       .then((response) => response.json())
       .then((data) => setItems(data));
   }, []);
 
+  useEffect(() => {
+    fetch('http://localhost:5001/api/products')
+      .then((response) => response.json())
+      .then((data) => setProducts(data));
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost:5000/api/items', {
+    fetch('http://localhost:5001/api/items', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,18 +42,27 @@ function App() {
             <li key={item.id}>{item.name}</li>
           ))}
         </ul>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={newItem}
-            onChange={(e) => setNewItem(e.target.value)}
-            placeholder="Add a new item"
-          />
-          <button type="submit">Add Item</button>
-        </form>
+       <h1>Product Info</h1>
+      <ul>
+        {products.map(product => (
+          <li key={product.id}>
+            <strong>{product.name}</strong><br />
+            ${product.price} - {product.category}<br />
+            {product.description}<br />
+            <em>{product.stock}</em>
+            <hr />
+          </li>
+        ))}
+      </ul>
+  
       </header>
     </div>
+
+    
   );
+
 }
+
+
 
 export default App;
